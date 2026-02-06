@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   shrine-db:
     container_name: shrine_mysql  
@@ -10,11 +8,14 @@ services:
     image: shrine_mysql:test
     networks:
       - shrine_network
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
-        test: ["CMD", "mysql", "--version"]
+        test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-pabcdef12", "-e", "SELECT 1"]
         interval: 5s
         timeout: 10s
-        retries: 5
+        retries: 30
+        start_period: 60s
    
 
   shrine-fastapi:
@@ -29,7 +30,9 @@ services:
     ports:
       - "8000:80"
     depends_on:
-      - shrine-db
+      shrine-db:
+        condition: service_healthy
+    restart: on-failure
     
 
   shrine-react:
@@ -57,3 +60,6 @@ services:
 
 networks:
   shrine_network: {}
+
+volumes:
+  mysql_data:

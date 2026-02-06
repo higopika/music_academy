@@ -4,15 +4,9 @@ ENV MYSQL_ROOT_PASSWORD abcdef12
 ENV MYSQL_USER shrine
 ENV MYSQL_PASSWORD abcdef12
 ENV MYSQL_DATABASE Student
-ENV MYSQL_DUMP_FILE=/myscripts/create_database.sql
 
-RUN mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint_bak.sh
-COPY ./db/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod 775 /usr/local/bin/docker-entrypoint.sh
-
-
-RUN mkdir /myscripts
-COPY ./db/create_database.sql /myscripts/
+# Use MySQL's built-in initialization - SQL files in this folder run automatically on first start
+COPY ./db/create_database.sql /docker-entrypoint-initdb.d/
 
 
 

@@ -2,6 +2,12 @@ FROM asdkant/fastapi-hello-world
 
 RUN pip3 install mysql-connector-python
 RUN pip3 install sqlalchemy
+
+# Fix for Debian Buster EOL - use archived repositories
+RUN sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list
+
 RUN apt update
 RUN apt install nmap -y
 COPY tools/check_service.sh /

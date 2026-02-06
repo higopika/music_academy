@@ -1,30 +1,46 @@
-FROM ubuntu:20.04
+FROM node:18-alpine
 
 ENV TZ=Asia/Kolkata
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get -y update && \ 
-    apt-get install curl gnupg2 -y && \
-    apt-get install npm -y
-RUN npm install -g create-react-app --save
-RUN npm install axios --save 
-RUN npm install react-bootstrap bootstrap@3 --save   
-#RUN npm install react-router-dom --save
-RUN npm install react-router-dom@5.2 --save
+WORKDIR /frontend
 
-WORKDIR /
+# Create package.json for the React app
+RUN echo '{ \
+  "name": "frontend", \
+  "version": "0.1.0", \
+  "private": true, \
+  "dependencies": { \
+    "react": "^18.2.0", \
+    "react-dom": "^18.2.0", \
+    "react-scripts": "5.0.1", \
+    "axios": "^1.4.0", \
+    "react-bootstrap": "^2.7.0", \
+    "bootstrap": "^5.3.0", \
+    "react-router-dom": "^5.3.4", \
+    "web-vitals": "^2.1.0" \
+  }, \
+  "scripts": { \
+    "start": "react-scripts start", \
+    "build": "react-scripts build", \
+    "test": "react-scripts test", \
+    "eject": "react-scripts eject" \
+  }, \
+  "browserslist": { \
+    "production": [">0.2%", "not dead", "not op_mini all"], \
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"] \
+  } \
+}' > package.json
 
-RUN create-react-app frontend
+# Install dependencies
+RUN npm install
 
-WORKDIR /frontend/
+# Copy source files
+COPY frontend/src ./src
 
-RUN rm -rf src
-COPY frontend/src src
-# RUN ls
-# RUN rm App.js index.js
-# COPY front_end/src/App.js App.js
-# COPY front_end/src/index.js index.js
-# COPY front_end/src/ProductContext.js ProductContext.js
-# COPY front_end/src/components components
+# Create public folder with index.html
+RUN mkdir -p public && echo '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Music Academy</title></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>' > public/index.html
+
+EXPOSE 3000
 
 CMD ["npm","start"]

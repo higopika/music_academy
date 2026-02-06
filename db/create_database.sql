@@ -75,6 +75,7 @@ CREATE TABLE `teacher_phone_info` (
   `name` varchar(200) NOT NULL,
   `email` varchar(200) DEFAULT NULL,
   `phone` varchar(15),
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
    PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci; 
 
@@ -85,4 +86,18 @@ CREATE TABLE `course_info` (
   `fees` int,
    PRIMARY KEY (`course_id`),
    FOREIGN KEY(user_id) REFERENCES user_info(user_id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci; 
+
+CREATE TABLE `payment` (
+  `payment_id` int NOT NULL AUTO_INCREMENT,
+  `student_id` int NOT NULL,
+  `amount` decimal(10, 2) NOT NULL,
+  `due_date` date NOT NULL,
+  `payment_date` date DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `status` varchar(20) DEFAULT 'Pending',
+  `notes` text DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`payment_id`),
+   FOREIGN KEY(student_id) REFERENCES user_info(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci; 

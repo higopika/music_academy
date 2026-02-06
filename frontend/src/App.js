@@ -1,14 +1,12 @@
-/*https://www.youtube.com/watch?v=xRPaa2GC1Lw&list=PLU7aW4OZeUzwYXbC_mbQJdAU7JUu81RZo&index=7*/ 
-//import ReactDOM from "react-dom";
-//import react from 'react'
-//import {Navbar, Nav, Form, FormControl, Button, Badge} from 'react-bootstrap'
-import {BrowserRouter as Router, Link , Route,Switch } from 'react-router-dom'
+import {BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import NavBar from './components/navBar'
+import Dashboard from './components/Dashboard'
 import ProductsTable from './components/productsTable'
+import AddStudent from './components/AddStudent'
+import StudentProfile from './components/StudentProfile'
+import PaymentsList from './components/PaymentsList'
+import RecordPayment from './components/RecordPayment'
 import {ProductProvider} from './ProductContext'
-import ProductsRow from "./components/productsRow";
-/*import AddProducts from './components/AddProducts'*/
-import axios from 'axios'
 
 function App() {
   return (
@@ -16,8 +14,16 @@ function App() {
       <Router>
         <ProductProvider>
           <NavBar />
-              <Route exact path='/students' component={ProductsTable} />  
-              <Route exact path='/students' component={ProductsRow} />  
+          <Switch>
+            <Route exact path='/' component={Dashboard} />
+            <Route exact path='/dashboard' component={Dashboard} />
+            <Route exact path='/students' component={ProductsTable} />
+            <Route exact path='/students/add' component={AddStudent} />
+            <Route exact path='/students/edit/:id' component={AddStudent} />
+            <Route exact path='/students/:id' component={StudentProfile} />
+            <Route exact path='/payments' component={PaymentsList} />
+            <Route exact path='/payments/add' component={RecordPayment} />
+          </Switch>
         </ProductProvider>
       </Router>
     </div>
