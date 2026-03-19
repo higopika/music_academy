@@ -66,6 +66,9 @@ const NavBar = () => {
                 <Link to="/payments" style={navLinkStyle('/payments')}>
                     💰 Payments
                 </Link>
+                <Link to="/chatbot" style={navLinkStyle('/chatbot')}>
+                    🤖 AI Import
+                </Link>
             </div>
         </nav>
     );

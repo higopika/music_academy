@@ -29,6 +29,12 @@ services:
       - shrine_network
     ports:
       - "8000:80"
+    environment:
+      # AI Configuration - Azure OpenAI
+      - AI_PROVIDER=azure_openai
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_KEY=${AZURE_OPENAI_KEY}
+      - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT:-gpt-4}
     depends_on:
       shrine-db:
         condition: service_healthy

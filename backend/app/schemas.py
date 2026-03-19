@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date, datetime
 
 
@@ -17,8 +17,7 @@ class UserInfo(UserInfoBase):
     user_id: int
     created_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserInfoUpdate(BaseModel):
@@ -49,15 +48,13 @@ class Payment(PaymentBase):
     payment_id: int
     created_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PaymentWithStudent(Payment):
     student_name: Optional[str] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PaymentUpdate(BaseModel):
@@ -78,4 +75,11 @@ class DashboardStats(BaseModel):
     total_revenue: float
     pending_amount: float
     overdue_amount: float
+
+
+# ============ Chatbot Schemas ============
+
+class ChatMessage(BaseModel):
+    message: str
+    use_ai: Optional[bool] = True
 

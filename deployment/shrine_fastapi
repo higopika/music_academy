@@ -1,20 +1,47 @@
-FROM asdkant/fastapi-hello-world
+# Modern Python 3.11 with FastAPI
+FROM python:3.11-slim
 
-RUN pip3 install mysql-connector-python
-RUN pip3 install sqlalchemy
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    nmap \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
-# Fix for Debian Buster EOL - use archived repositories
-RUN sed -i 's|deb.debian.org/debian|archive.debian.org/debian|g' /etc/apt/sources.list && \
-    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
-    sed -i '/buster-updates/d' /etc/apt/sources.list
+# Install Python dependencies
+RUN pip install --no-cache-dir \
+    fastapi>=0.100.0 \
+    uvicorn[standard] \
+    gunicorn \
+    mysql-connector-python \
+    sqlalchemy \
+    pandas \
+    openpyxl \
+    xlrd>=2.0.1 \
+    python-multipart \
+    openai \
+    httpx
 
-RUN apt update
-RUN apt install nmap -y
-COPY tools/check_service.sh /
+# Create app directory
+WORKDIR /app
+
+# Copy application files
+COPY backend/app/main.py /app/
+COPY backend/app/crud.py /app/
+COPY backend/app/database.py /app/
+COPY backend/app/models.py /app/
+COPY backend/app/schemas.py /app/
+COPY backend/app/utils.py /app/
+COPY backend/app/chatbot_service.py /app/
+
+# Copy service check script
+COPY tools/check_service.sh /check_service.sh
 RUN chmod +x /check_service.sh
-COPY backend/app/* /app/
 
-CMD /check_service.sh shrine_mysql 3306; /start.sh
+# Expose port
+EXPOSE 80
+
+# Start command - wait for MySQL then start FastAPI
+CMD /check_service.sh shrine_mysql 3306; uvicorn main:app --host 0.0.0.0 --port 80
 
 
 

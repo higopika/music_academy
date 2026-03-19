@@ -39,7 +39,7 @@ def update_user(db: Session, user_id: int, user_update: schemas.UserInfoUpdate):
     if not db_user:
         return None
     
-    update_data = user_update.dict(exclude_unset=True)
+    update_data = user_update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_user, key, value)
     
@@ -125,7 +125,7 @@ def update_payment(db: Session, payment_id: int, payment_update: schemas.Payment
     if not db_payment:
         return None
     
-    update_data = payment_update.dict(exclude_unset=True)
+    update_data = payment_update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_payment, key, value)
     

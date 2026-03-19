@@ -6,6 +6,7 @@ import AddStudent from './components/AddStudent'
 import StudentProfile from './components/StudentProfile'
 import PaymentsList from './components/PaymentsList'
 import RecordPayment from './components/RecordPayment'
+import Chatbot from './components/Chatbot'
 import {ProductProvider} from './ProductContext'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route exact path='/students/:id' component={StudentProfile} />
             <Route exact path='/payments' component={PaymentsList} />
             <Route exact path='/payments/add' component={RecordPayment} />
+            <Route exact path='/chatbot' component={Chatbot} />
           </Switch>
         </ProductProvider>
       </Router>
